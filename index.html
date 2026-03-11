@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh;">
+
+  <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); width: 300px;">
+    <h2 style="text-align: center; margin-bottom: 20px;">Login</h2>
+
+    <!-- Error Message -->
+    <div id="error-msg" style="color: red; text-align: center; margin-bottom: 15px; display: none;"></div>
+    <div id="success-msg" style="color: green; text-align: center; margin-bottom: 15px; display: none;"></div>
+
+    <!-- Email -->
+    <input type="email" id="email" placeholder="Username\Email" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
+
+    <!-- Password -->
+    <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 5px; border: 1px solid #ccc;">
+
+    <!-- Login Button -->
+    <button id="login-btn" style="width: 100%; padding: 10px; border-radius: 5px; border: none; background-color: #007BFF; color: white; cursor: pointer;">
+      Login
+    </button>
+
+    <!-- Sign-up link -->
+    <p style="text-align: center; margin-top: 15px; font-size: 14px;">
+      New account? 
+      <a href="signup.html" style="color: #007BFF; text-decoration: none;">Sign up</a>
+    </p>
+  </div>
+
+<script>
+
+const { createClient } = supabase;
+
+const db = createClient(
+            'https://cvmfvndfmzmhywttaujy.supabase.co', 
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2bWZ2bmRmbXptaHl3dHRhdWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMjgwOTQsImV4cCI6MjA4ODcwNDA5NH0.1mzfGgPWNPRyb1pwra2KTrayCzAqhyn7p5CGEb4UItE'
+        );
+
+        function errorHandle(m){
+
+          var errorMsg = document.getElementById("error-msg");
+          errorMsg.textContent = m;
+          errorMsg.style.display = "block";
+
+        }
+
+        async function logIn(e){
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const btn = document.getElementById("login-btn");
+          const signedUp = document.getElementById("success-msg");
+          var errorMsg = document.getElementById("error-msg");
+
+          const {data, error} = await db.from("users").select("*").eq("email", email).eq("password", password);
+
+          
+
+          if(error){
+          return errorHandle("Problem Occured");
+        }
+
+          if(data == !data){
+          return errorHandle("Incorrect email or password");
+        }
+
+        if(data.password == !data.password){
+          return errorHandle("Incorrect email or password");
+        }
+
+        signedUp.textContent = "Log in successful! Redirecting main page...";
+          signedUp.style.display = "block";
+        
+
+          errorMsg.style.display = "none";
+
+                 setTimeout(() => {
+  window.location.href = 'logged.html';
+}, 2000); 
+
+      }
+
+
+
+        sessionStorage.setItem('user', JSON.stringify({name, email}))
+document.getElementById("login-btn").addEventListener('click', logIn);
+
+</script>
+
+</body>
+</html>
